@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'accounts/site.css' %}">
+</head>
+<body>
+<main class="page-shell">
+    <section class="auth-card">
+        {% include "accounts/partials/brand.html" %}
+        <header class="page-heading">
+            <h1>Create an account</h1>
+            <p class="subtitle">Fill in your details to get started.</p>
+        </header>
+
+        {% if messages %}
+            <div class="messages" role="status">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if form.errors %}
+            <div class="messages" role="alert">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p>{{ field.label }}: {{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username</label>
+                {{ form.username }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email address</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password</label>
+                {{ form.password1 }}
+                <label class="show-password">
+                    <input type="checkbox" class="show-register-passwords">
+                    Show password
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm password</label>
+                {{ form.password2 }}
+                <label class="show-password">
+                    <input type="checkbox" class="show-register-passwords">
+                    Show password
+                </label>
+            </div>
+            <button type="submit" class="btn">Create account</button>
+        </form>
+
+        <a href="{% url 'login_user' %}" class="secondary-link">I already have an account</a>
+    </section>
+</main>
+<script>
+    document.querySelectorAll('.show-register-passwords').forEach(function (toggle) {
+        toggle.addEventListener('change', function () {
+            const passwordField = this.closest('.form-group').querySelector('input[type="password"], input[type="text"]');
+            passwordField.type = this.checked ? 'text' : 'password';
+        });
+    });
+</script>
+</body>
+</html>

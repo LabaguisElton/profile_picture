@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+**/venv/
+**/.venv/
+
+# Local database, uploads, and generated static files
+*.sqlite3
+*.sqlite3-journal
+media/
+staticfiles/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db

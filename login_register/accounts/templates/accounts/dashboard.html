@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Facebook Pages</title>
+    <link rel="stylesheet" href="{% static 'accounts/site.css' %}">
+</head>
+<body>
+<header class="topbar">
+    <div class="topbar-search">
+        {% include "accounts/partials/brand.html" %}
+        <input class="search-box" type="search" placeholder="&#128269;  Search Facebook" aria-label="Search Facebook">
+    </div>
+    <div class="topbar-right">
+        <button class="round-button" type="button" aria-label="Menu">&#9783;</button>
+        <button class="round-button" type="button" aria-label="Messenger">&#9993;</button>
+        <button class="round-button" type="button" aria-label="Notifications">&#9825;</button>
+        <span class="profile-avatar">A</span>
+    </div>
+</header>
+
+<main class="layout">
+    <aside class="sidebar">
+        <h2 class="sidebar-title">Manage Pages and profiles</h2>
+        <a class="side-link" href="{% url 'home' %}">
+            <span class="side-icon">U</span><strong>User</strong>
+        </a>
+        <p class="sidebar-title">Meta Business Suite</p>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9633;</span>Inbox</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9638;</span>Planner</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9636;</span>Publishing tools</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9881;</span>Insights</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9707;</span>News Feed</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9889;</span>Business Apps</a>
+        <p class="sidebar-title">Professional dashboard</p>
+        <a class="side-link active" href="{% url 'home' %}"><span class="side-icon">&#8962;</span>Home</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9993;</span>Messenger Tools</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9825;</span>Notifications</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9654;</span>Insights</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9638;</span>Ad Center</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9745;</span>Page Quality</a>
+        <a class="side-link" href="{% url 'home' %}"><span class="side-icon">&#9998;</span>Edit Page Info</a>
+    </aside>
+
+    <section class="page-column">
+        <header class="page-header">
+            <div class="cover">
+                <button class="edit-cover" type="button">&#128247; Edit</button>
+            </div>
+            <div class="profile-row">
+                <div class="page-logo">
+                    {% if profile.image %}
+                        <img src="{{ profile.image.url }}" alt="Profile picture">
+                    {% else %}
+                        &#9811;
+                    {% endif %}
+                </div>
+                <div>
+                    <h1 class="page-name">User</h1>
+                    <p class="page-meta">Create @Username · Podcast</p>
+                </div>
+                <div class="profile-actions">
+                    <form class="profile-picture-form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label class="profile-picture-label">
+                            Choose photo
+                            {{ profile_picture_form.image }}
+                        </label>
+                        {% if profile_picture_form.image.errors %}
+                            <div class="profile-picture-errors">{{ profile_picture_form.image.errors }}</div>
+                        {% endif %}
+                        <button class="profile-picture-button" type="submit" name="action" value="profile_picture">Upload</button>
+                        {% if profile.image %}
+                            <button class="profile-picture-delete" type="submit" name="action" value="delete_profile_picture">Delete photo</button>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+            <nav class="tabs-row" aria-label="Page navigation">
+                <a class="tab active" href="{% url 'home' %}">Home</a>
+                <a class="tab" href="{% url 'home' %}">About</a>
+                <a class="tab" href="{% url 'home' %}">Videos</a>
+                <a class="tab" href="{% url 'home' %}">Events</a>
+                <a class="tab" href="{% url 'home' %}">More &#9662;</a>
+                <div class="tab-actions">
+                    <button class="tab-action" type="button">&#128227; Advertise</button>
+                    <button class="tab-action" type="button">&#128269;</button>
+                    <button class="tab-action" type="button">&#8943;</button>
+                </div>
+            </nav>
+        </header>
+
+        <section class="feed-area">
+            <div class="suite-card">
+                <span class="suite-icon">&#9688;</span>
+                <p><strong>&#9635; Manage your Page and Instagram account together with Meta Business Suite.</strong></p>
+                <button class="open-now" type="button">Open now</button>
+            </div>
+
+            <div class="tool-card">
+                <div class="tool">
+                    <div><strong>Free Meta Business Tools</strong><span>&#9635; Post templates</span></div>
+                    <button class="close-tool" type="button">&#10005;</button>
+                </div>
+                <div class="tool">
+                    <div><strong>Create post in Meta Business Suite</strong><span>Create post in Facebook</span></div>
+                    <button class="close-tool" type="button">&#10005;</button>
+                </div>
+            </div>
+
+            <section class="composer" aria-label="Create a post">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.content }}
+                    {{ form.image }}
+                    <button type="submit" class="publish-button">Post</button>
+                </form>
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                {% if form.errors %}
+                    <div class="messages">{{ form.errors }}</div>
+                {% endif %}
+            </section>
+
+            <section class="posts" aria-label="Posts">
+                {% for post in posts %}
+                    <article class="post-card">
+                        <header class="post-meta">
+                            <span class="profile-avatar">A</span>
+                            <div>
+                                <strong>User</strong>
+                                <small class="post-time">{{ post.created_at|date:"M j, Y · P" }}</small>
+                            </div>
+                        </header>
+                        <div class="post-content">{{ post.content|linebreaksbr }}</div>
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="Post image" class="post-image">
+                        {% endif %}
+                        <div class="post-actions">
+                            <button class="post-action" type="button">&#128077; Like</button>
+                            <a class="post-action" href="{% url 'edit_post' post.id %}">&#9998; Edit</a>
+                            <a class="post-action" href="{% url 'delete_post' post.id %}">&#128465; Delete</a>
+                        </div>
+                    </article>
+                {% empty %}
+                    <article class="post-card">
+                        <p class="post-content">No posts yet.</p>
+                    </article>
+                {% endfor %}
+            </section>
+        </section>
+    </section>
+</main>
+</body>
+</html>
